@@ -1,0 +1,8 @@
+__pycache__/
+ms-coco/
+wikiart/
+*.ipynb
+.ipynb_checkpoints/
+.vscode/
+
+
