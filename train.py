@@ -6,6 +6,7 @@ import argparse
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # Disable tensorflow debugging logs
 import tensorflow as tf
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 from tensorflow.keras.applications import vgg19
 import numpy as np
 import time
@@ -18,26 +19,26 @@ gpus = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(gpus[0], True)
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
+policy = mixed_precision.Policy('mixed_float16')
+mixed_precision.set_policy(policy)
 
 
 def create_ds(args):
-    content_list_ds = tf.data.Dataset.list_files(str(args.content_dir + '*.jpg'), shuffle=True)
+    content_list_ds = tf.data.Dataset.list_files(str(args.content_dir + '*.jpg'), shuffle=True).cache()
     content_images_ds = content_list_ds.map(resize_convert, num_parallel_calls=AUTOTUNE)
 
-    style_list_ds = tf.data.Dataset.list_files(str(args.style_dir + '*.jpg'), shuffle=True)
+    style_list_ds = tf.data.Dataset.list_files(str(args.style_dir + '*.jpg'), shuffle=True).cache()
     style_images_ds = style_list_ds.map(resize_convert, num_parallel_calls=AUTOTUNE)
 
-    content_images_ds = content_images_ds.repeat().batch(hparams['batch_size']).prefetch(AUTOTUNE)
-    style_images_ds = style_images_ds.repeat().batch(hparams['batch_size']).prefetch(AUTOTUNE)
-
-    return tf.data.Dataset.zip((content_images_ds, style_images_ds))
+    return tf.data.Dataset.zip((content_images_ds, 
+                                style_images_ds)).repeat().batch(hparams['batch_size']).prefetch(AUTOTUNE)
 
 
 def create_test_batch(args):# Paper original content-style images
     test_content_img = ['avril_cropped.jpg', 
                         'cornell_cropped.jpg',
                         'chicago_cropped.jpg']
-    test_style_img = ['impronte_d_artista_cropped.jpg', 
+    test_style_img = ['picasso.png', 
                       'woman_with_hat_matisse_cropped.jpg',
                       'ashville_cropped.jpg']
 
@@ -57,6 +58,7 @@ def run_training(args):
                                                                    decay_rate = hparams['decay_rate'], 
                                                                    staircase=False)
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+    optimizer = mixed_precision.LossScaleOptimizer(optimizer, loss_scale='dynamic')
 
     ckpt_dir = os.path.join(args.name, 'pretrained')
     ckpt = tf.train.Checkpoint(network=st_network,
@@ -78,8 +80,8 @@ def run_training(args):
     log_dir = os.path.join(args.name, 'log_dir')
     writer = tf.summary.create_file_writer(log_dir)
     total_loss_avg = tf.keras.metrics.Mean()
-    style_loss_avg = tf.keras.metrics.Mean()
     content_loss_avg = tf.keras.metrics.Mean()
+    style_loss_avg = tf.keras.metrics.Mean()
 
     save_hparams(args.name)
     
@@ -98,11 +100,13 @@ def run_training(args):
             g_t_feats = st_network.encoder(g_t)
             c_loss = hparams['content_weight']*content_loss(g_t_feats[-1], st_network.t)
             s_loss = hparams['style_weight']*style_loss(g_t_feats, st_network.s_feats)        
-            total_loss = c_loss + s_loss 
+            total_loss = c_loss + s_loss
+            scaled_loss = optimizer.get_scaled_loss(total_loss)
 
-        gradients = tape.gradient(total_loss, st_network.trainable_variables)
-        optimizer.apply_gradients(zip(gradients, 
-                                      st_network.trainable_variables))
+        scaled_gradients = tape.gradient(scaled_loss, st_network.trainable_variables)
+        gradients = optimizer.get_unscaled_gradients(scaled_gradients)
+        #gradients = tape.gradient(total_loss, st_network.trainable_variables)
+        optimizer.apply_gradients(zip(gradients, st_network.trainable_variables))
         return total_loss, c_loss, s_loss
 
     total_start = time.time()
@@ -116,6 +120,7 @@ def run_training(args):
         step_int = int(ckpt.step) # cast ckpt.step
 
         if (step_int) % args.ckpt_interval == 0:
+            print('Time taken for step {} is {} sec'.format(step_int, time.time()-start))
             ckpt_manager.save(step_int)
 
             prediction_norm = test_step(test_content_batch, test_style_batch) 
@@ -134,8 +139,10 @@ def run_training(args):
             print('Loss content: {:.4f}'.format(content_loss_avg.result()))
             print('Loss style: {:.4f}'.format(style_loss_avg.result()))
             print('Learning rate: {}'.format(optimizer.learning_rate(step_int)))
-            print('Time taken for step {} is {} sec'.format(step_int, time.time()-start))
             print('Total time: {} sec\n'.format(time.time()-total_start))
+            total_loss_avg.reset_states() # reset mixed precision nan
+            content_loss_avg.reset_states() # reset mixed precision nan
+            style_loss_avg.reset_states() # reset mixed precision nan
 
 
 def main():
@@ -144,7 +151,7 @@ def main():
     parser.add_argument('--style_dir', default='./wikiart/')
     parser.add_argument('--name', default='model')
     parser.add_argument('--examples_dir', default='./examples/')
-    parser.add_argument('--ckpt_interval', type=int, default=50)
+    parser.add_argument('--ckpt_interval', type=int, default=250)
     parser.add_argument('--max_ckpt_to_keep', type=int, default=20)
     parser.add_argument('--test_content_img', default='./images/content_img/')
     parser.add_argument('--test_style_img', default='./images/style_img/')

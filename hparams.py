@@ -1,6 +1,6 @@
 hparams = {'batch_size': 8,
            'content_weight': 1e-7, #
-           'style_weight': 1e-6, #
+           'style_weight': 5e-7, #
            'initial_learning_rate': 1e-4,
            'decay_rate': 5e-5,
            'resize_smallest_dim': 512,

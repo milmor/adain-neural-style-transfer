@@ -40,12 +40,16 @@ def tensor_to_image(tensor):
     return PIL.Image.fromarray(tensor)
 
 def content_loss(output_features, adain):
+    output_features = tf.cast(output_features, tf.float32) # mixed precision
+    adain = tf.cast(adain, tf.float32) # mixed precision
     return tf.reduce_sum(
             tf.reduce_mean(tf.square(output_features - adain), axis=[1, 2]))
 
 def style_loss(output_features, style_features, epsilon=1e-5):
     s_loss = 0  
     for o_feat, s_feat in zip(output_features, style_features):
+        o_feat = tf.cast(o_feat, tf.float32) # mixed precision
+        s_feat = tf.cast(s_feat, tf.float32) # mixed precision
         o_mean, o_var = tf.nn.moments(o_feat, [1, 2])
         s_mean, s_var = tf.nn.moments(s_feat, [1, 2])
         o_std = tf.sqrt(tf.add(o_var, epsilon))

@@ -54,12 +54,14 @@ def Decoder(input_shape = (None, None, 512), initializer = 'glorot_normal'):
     x = ConvReflect(64, 3, activation='relu',
                     kernel_initializer=initializer)(x)   
     x = ConvReflect(3, 3, kernel_initializer=initializer)(x)
-    outputs = layers.Activation('linear')(x)
+    outputs = layers.Activation('linear', dtype='float32')(x)
 
     return tf.keras.models.Model(inputs, outputs)
 
 
 def AdaIN(content, style, epsilon=1e-5):
+    #content = tf.cast(content, tf.float32) # optional mixed precision
+    #style = tf.cast(style, tf.float32) # optional mixed precision
     c_mean, c_var = tf.nn.moments(content, [1, 2], keepdims=True)
     s_mean, s_var = tf.nn.moments(style, [1, 2], keepdims=True)
 
@@ -77,7 +79,9 @@ class VGGEncoder(tf.keras.models.Model):
         super(VGGEncoder, self).__init__()
         vgg = vgg19.VGG19(include_top=False, weights='imagenet')
         vgg.trainable = False
-        model_outputs = [vgg.get_layer(name).output for name in style_layers]
+        #model_outputs = [vgg.get_layer(name).output for name in style_layers]
+        # mixed precision cast
+        model_outputs = [tf.cast(vgg.get_layer(name).output, tf.float32) for name in style_layers]
         self.model = tf.keras.models.Model([vgg.input], model_outputs)
 
     def call(self, x):
