@@ -25,7 +25,7 @@ def resize_convert(file_path):
     img = tf.image.random_crop(img, hparams['resize_dim'])    
     return img
 
-def convert(file_path, shape=hparams['corp_size']):
+def convert(file_path, shape=hparams['input_size']):
     img = tf.io.read_file(file_path)
     img = tf.image.decode_jpeg(img, channels=3)
     img = tf.image.resize(img, shape)

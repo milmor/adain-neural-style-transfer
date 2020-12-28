@@ -28,7 +28,6 @@ class ConvReflect(tf.keras.layers.Layer):
 
 
 def Decoder(input_shape = (None, None, 512), initializer = 'glorot_normal'):
-    # Block 1 
     inputs = tf.keras.Input(shape=input_shape)
 
     x = ConvReflect(256, 3, activation='relu',
@@ -90,7 +89,7 @@ class VGGEncoder(tf.keras.models.Model):
 
 
 class StyleTransferNetwork(tf.keras.models.Model):
-    def __init__(self, corp_size=(256, 256),
+    def __init__(self, input_size=(256, 256),
                  style_layers=['block1_conv1',
                                'block2_conv1',
                                'block3_conv1',
@@ -100,8 +99,8 @@ class StyleTransferNetwork(tf.keras.models.Model):
         self.encoder.trainable = False
         self.decoder = Decoder()
         self.corp_layer = tf.keras.Sequential([   
-            layers.experimental.preprocessing.RandomCrop(corp_size[0], 
-                                                         corp_size[1])
+            layers.experimental.preprocessing.RandomCrop(input_size[0], 
+                                                         input_size[1])
         ])
       
     def call(self, content, style, alpha=1.0, training=True):     

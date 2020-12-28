@@ -51,7 +51,7 @@ def create_test_batch(args):# Paper original content-style images
 
 
 def run_training(args):   
-    st_network = StyleTransferNetwork(hparams['corp_size'])
+    st_network = StyleTransferNetwork(hparams['input_size'])
 
     learning_rate = tf.keras.optimizers.schedules.InverseTimeDecay(hparams['initial_learning_rate'], 
                                                                    decay_steps = 1.0, 
@@ -131,8 +131,8 @@ def run_training(args):
                 tf.summary.scalar('style loss', style_loss_avg.result(), step=step_int)     
                 tf.summary.scalar('learning rate', optimizer.learning_rate(step_int), 
                                                                            step=step_int) 
-                images = np.reshape(prediction_norm, (-1, hparams['corp_size'][0], 
-                                                          hparams['corp_size'][1], 3))
+                images = np.reshape(prediction_norm, (-1, hparams['input_size'][0], 
+                                                          hparams['input_size'][1], 3))
                 tf.summary.image('generated image', images, step=step_int, max_outputs=3)
 
             print('Step {} Loss: {:.4f}'.format(step_int, total_loss_avg.result())) 
