@@ -13,15 +13,16 @@ from hparams import hparams
 def run_test(args):
     st_network = StyleTransferNetwork(hparams['test_size'])
     ckpt_dir = os.path.join(args.name, 'pretrained')
-    ckpt = tf.train.Checkpoint(network=st_network)
+    ckpt = tf.train.Checkpoint(network=st_network, step=tf.Variable(0))
     ckpt.restore(tf.train.latest_checkpoint(ckpt_dir)).expect_partial()
     print('\n################################')
     print('Adain Neural Style Transfer Test')
     print('################################\n')
-    print('Restored {}\n'.format(args.name))
+    print('Restored {} step: {}\n'.format(args.name, str(ckpt.step.numpy())))
     
-    dir_size = '{}x{}'.format(str(hparams['test_size'][0]), 
-                                 str(hparams['test_size'][1]))
+    dir_size = 'step_{}_{}x{}'.format(str(ckpt.step.numpy()),
+                                      str(hparams['test_size'][0]),
+                                      str(hparams['test_size'][1]))
     dir_model = 'output_img_{}'.format(args.name)
     out_dir = os.path.join(args.output_path, dir_model, dir_size)
 
@@ -59,4 +60,3 @@ def main():
 	
 if __name__ == '__main__':
 	main()
-    

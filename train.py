@@ -24,10 +24,14 @@ mixed_precision.set_policy(policy)
 
 
 def create_ds(args):
-    content_list_ds = tf.data.Dataset.list_files(str(args.content_dir + '*.jpg'), shuffle=True).cache()
+    content_list_ds = tf.data.Dataset.list_files(str(args.content_dir + '*.jpg'), shuffle=True)
+    content_len = tf.data.experimental.cardinality(content_list_ds)
+    content_list_ds = content_list_ds.cache().shuffle(content_len)
     content_images_ds = content_list_ds.map(resize_convert, num_parallel_calls=AUTOTUNE)
 
-    style_list_ds = tf.data.Dataset.list_files(str(args.style_dir + '*.jpg'), shuffle=True).cache()
+    style_list_ds = tf.data.Dataset.list_files(str(args.style_dir + '*.jpg'), shuffle=True)
+    style_len = tf.data.experimental.cardinality(style_list_ds)
+    style_list_ds = style_list_ds.cache().shuffle(style_len)
     style_images_ds = style_list_ds.map(resize_convert, num_parallel_calls=AUTOTUNE)
 
     return tf.data.Dataset.zip((content_images_ds, 
