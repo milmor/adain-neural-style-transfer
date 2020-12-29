@@ -9,17 +9,17 @@ Implementation of the paper:
 
 ## Examples
 <p align='center'>
-  <img src='images/content_img/chicago_cropped.jpg' width="160px">
-  <img src='images/style_img/ashville_cropped.jpg' width="160px">
-  <img src='images/output_img_mixed7/step_152000_512x512/chicago_cropped_ashville_cropped.jpeg' width="160px">
+  <img src='images/content_img/chicago_cropped.jpg' width="250">
+  <img src='images/style_img/ashville_cropped.jpg' width="250">
+  <img src='images/output_img_mixed7/step_152000_512x512/chicago_cropped_ashville_cropped.jpeg' width="250">
 <br>
-  <img src='images/content_img/avril_cropped.jpg' width="160px">
-  <img src='images/style_img/picasso.png' width="160px">
-  <img src='images/output_img_mixed7/step_152000_512x512/avril_cropped_picasso.jpeg' width="160px">
+  <img src='images/content_img/avril_cropped.jpg' width="250">
+  <img src='images/style_img/picasso.png' width="250">
+  <img src='images/output_img_mixed7/step_152000_512x512/avril_cropped_picasso.jpeg' width="250">
 <br>
-  <img src='images/content_img/cornell_cropped.jpg' width="160px">
-  <img src='images/style_img/woman_with_hat_matisse_cropped.jpg' width="160px">
-  <img src='images/output_img_mixed7/step_152000_512x512/cornell_cropped_woman_with_hat_matisse_cropped.jpeg' width="160px">
+  <img src='images/content_img/cornell_cropped.jpg' width="250">
+  <img src='images/style_img/woman_with_hat_matisse_cropped.jpg' width="250">
+  <img src='images/output_img_mixed7/step_152000_512x512/cornell_cropped_woman_with_hat_matisse_cropped.jpeg' width="250">
 </p>
 
 
@@ -42,6 +42,9 @@ Run `test.py`. It will save every possible combination of content and styles to 
 python test.py --name=<model_name> --test_content_img=<content_path> --test_style_img=<style_path>
 ```
 
+### Hparams setting
+Set hyperparameters in `hparams.py` file.
+
 ### Tensorboard
 Run `tensorboard --logdir ./`
 
@@ -59,6 +62,3 @@ Copyright (c) 2020 Emilio Morales. Free to use, copy and modify for academic res
   year = {2020},
 }
 ```
-```
-
-
