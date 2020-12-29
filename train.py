@@ -76,6 +76,7 @@ def run_training(args):
                                               
     ckpt.restore(ckpt_manager.latest_checkpoint)
     log_dir = os.path.join(args.name, 'log_dir')
+    writer = tf.summary.create_file_writer(log_dir)
 
     print('\n#################################')
     print('Adain Neural Style Transfer Train')
@@ -87,7 +88,6 @@ def run_training(args):
         save_hparams(args.name)
     print('Start TensorBoard with: $ tensorboard --logdir ./\n')
 
-    writer = tf.summary.create_file_writer(log_dir)
     total_loss_avg = tf.keras.metrics.Mean()
     content_loss_avg = tf.keras.metrics.Mean()
     style_loss_avg = tf.keras.metrics.Mean()
