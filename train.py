@@ -34,8 +34,11 @@ def create_ds(args):
     style_list_ds = style_list_ds.cache().shuffle(style_len)
     style_images_ds = style_list_ds.map(resize_convert, num_parallel_calls=AUTOTUNE)
 
-    return tf.data.Dataset.zip((content_images_ds, 
-                                style_images_ds)).repeat().batch(hparams['batch_size']).prefetch(AUTOTUNE)
+    print('Total content images: {}'.format(content_len.numpy()))
+    print('Total style images: {}'.format(style_len.numpy()))
+
+    ds = tf.data.Dataset.zip((content_images_ds, style_images_ds))
+    return ds.repeat().batch(hparams['batch_size']).prefetch(AUTOTUNE)
 
 
 def create_test_batch(args):# Paper original content-style images
@@ -72,6 +75,8 @@ def run_training(args):
                                               max_to_keep=args.max_ckpt_to_keep)
                                               
     ckpt.restore(ckpt_manager.latest_checkpoint)
+    log_dir = os.path.join(args.name, 'log_dir')
+
     print('\n#################################')
     print('Adain Neural Style Transfer Train')
     print('#################################\n')
@@ -79,15 +84,13 @@ def run_training(args):
         print('Restored {} from: {}'.format(args.name, ckpt_manager.latest_checkpoint))
     else:
         print('Initializing {} from scratch'.format(args.name))
+        save_hparams(args.name)
     print('Start TensorBoard with: $ tensorboard --logdir ./\n')
 
-    log_dir = os.path.join(args.name, 'log_dir')
     writer = tf.summary.create_file_writer(log_dir)
     total_loss_avg = tf.keras.metrics.Mean()
     content_loss_avg = tf.keras.metrics.Mean()
     style_loss_avg = tf.keras.metrics.Mean()
-
-    save_hparams(args.name)
     
     dataset = create_ds(args)
     test_content_batch, test_style_batch = create_test_batch(args)
