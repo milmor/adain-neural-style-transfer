@@ -41,7 +41,7 @@ def run_test(args):
         tensor = tensor_to_image(output)
         c_name = os.path.splitext(c_file)[0] 
         s_name = os.path.splitext(s_file)[0]
-        save_path = os.path.join(out_dir, '{}_{}'.format(c_name, s_name))
+        save_path = os.path.join(out_dir, '{}_{}_alpha={}'.format(c_name, s_name, hparams['test_alpha']))
         tensor.save(save_path + '.jpeg')
         print ('Image: {}.jpeg saved'.format(save_path))
 
