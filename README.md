@@ -51,12 +51,12 @@ Run `tensorboard --logdir ./`
 ### Content-style trade-off
 Use hparam alpha to adjust the degree of stylization
 <p align='center'>
-  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.jpeg' width="200">
-  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.25.jpeg' width="200">
-  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.5.jpeg' width="200">
-  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.75.jpeg' width="200">
-  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=1.jpeg' width="200">
-  <img src='images/style_img/ashville_cropped.jpg' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.jpeg' width="150">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.25.jpeg' width="150">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.5.jpeg' width="150">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.75.jpeg' width="150">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=1.jpeg' width="150">
+  <img src='images/style_img/ashville_cropped.jpg' width="150">
 <br>
 </p>
 
