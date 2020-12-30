@@ -9,17 +9,17 @@ Implementation of the paper:
 
 ## Examples
 <p align='center'>
-  <img src='images/content_img/chicago_cropped.jpg' width="250">
-  <img src='images/style_img/ashville_cropped.jpg' width="250">
-  <img src='images/output_img_mixed7/step_152000_512x512/chicago_cropped_ashville_cropped.jpeg' width="250">
-<br>
   <img src='images/content_img/avril_cropped.jpg' width="250">
   <img src='images/style_img/picasso.png' width="250">
-  <img src='images/output_img_mixed7/step_152000_512x512/avril_cropped_picasso.jpeg' width="250">
+  <img src='images/output_img_mixed7/step_143000_512x512/avril_cropped_picasso_alpha=1.jpeg' width="250">
+<br>
+  <img src='images/content_img/islas.jpeg' width="250">
+  <img src='images/style_img/ashville_cropped.jpg' width="250">
+  <img src='images/output_img_mixed7/step_143000_512x512/islas_ashville_cropped_alpha=1.jpeg' width="250">
 <br>
   <img src='images/content_img/cornell_cropped.jpg' width="250">
   <img src='images/style_img/woman_with_hat_matisse_cropped.jpg' width="250">
-  <img src='images/output_img_mixed7/step_152000_512x512/cornell_cropped_woman_with_hat_matisse_cropped.jpeg' width="250">
+  <img src='images/output_img_mixed7/step_143000_512x512/cornell_cropped_woman_with_hat_matisse_cropped_alpha=1.jpeg' width="250">
 </p>
 
 
@@ -47,6 +47,28 @@ Set hyperparameters in `hparams.py` file.
 
 ### Tensorboard
 Run `tensorboard --logdir ./`
+
+### Content-style trade-off
+Use hparam alpha to adjust the degree of stylization
+<p align='center'>
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.jpeg' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.25.jpeg' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.5.jpeg' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=0.75.jpeg' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/chicago_cropped_ashville_cropped_alpha=1.jpeg' width="200">
+  <img src='images/style_img/ashville_cropped.jpg' width="200">
+<br>
+</p>
+
+
+## Implementation notes
+- The decoder generates the output directly [0, 255].
+
+- Conv2d layers with reflect padding.
+
+- Above images are generated after 140,000 steps.
+
+- The model runs using mixed precision.
 
 
 ## Licence
