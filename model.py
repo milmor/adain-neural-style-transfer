@@ -1,4 +1,10 @@
-'''
+'''Style Transfer Network model for Tensorflow.
+
+# Reference paper
+- Xun Huang and Serge Belongie. 
+  [Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization]
+  (https://arxiv.org/abs/1703.06868) (ICCV 2017)
+
 Author: Emilio Morales (mil.mor.mor@gmail.com)
         Oct 2020
 '''
@@ -93,7 +99,8 @@ class StyleTransferNetwork(tf.keras.models.Model):
                  style_layers=['block1_conv1',
                                'block2_conv1',
                                'block3_conv1',
-                               'block4_conv1']):
+                               'block4_conv1'],
+                 content_layer_index=-1):
         super(StyleTransferNetwork, self).__init__()
         self.encoder = VGGEncoder(style_layers)
         self.encoder.trainable = False
@@ -102,12 +109,13 @@ class StyleTransferNetwork(tf.keras.models.Model):
             layers.experimental.preprocessing.RandomCrop(input_size[0], 
                                                          input_size[1])
         ])
-      
+        self.c_layer_idx = content_layer_index
+
     def call(self, content, style, alpha=1.0, training=True):     
         content_input = self.corp_layer(content, training=training)
         style_input = self.corp_layer(style, training=training)
 
-        self.c_feat = self.encoder(content_input)[-1]
+        self.c_feat = self.encoder(content_input)[self.c_layer_idx]
         self.s_feats = self.encoder(style_input)
-        self.t = (1 - alpha) * self.c_feat + alpha * AdaIN(self.c_feat, self.s_feats[-1])    
+        self.t = (1 - alpha) * self.c_feat + alpha * AdaIN(self.c_feat, self.s_feats[self.c_layer_idx])    
         return self.decoder(self.t)  

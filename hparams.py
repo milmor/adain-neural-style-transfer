@@ -6,6 +6,11 @@ hparams = {'batch_size': 8,
            'resize_smallest_dim': 512,
            'resize_dim': (512, 512, 3),
            'input_size': (256, 256), # preprocessing.RandomCrop size
+           'style_layers': ['block1_conv1',
+                                     'block2_conv1',
+                                     'block3_conv1',
+                                     'block4_conv1'],
+           'content_layer_index': -1,
            'test_size': (512, 512),
-           'test_alpha': 1.0,
+           'test_alpha': 1.0
 }

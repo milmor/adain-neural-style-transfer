@@ -6,6 +6,7 @@ Implementation of the paper:
 
 ![Architecture](./images/architecture.jpg)
 
+See [here](https://github.com/xunhuang1995/AdaIN-style) for the official Torch implementation.
 
 ## Examples
 <p align='center'>

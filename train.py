@@ -58,7 +58,9 @@ def create_test_batch(args):# Paper original content-style images
 
 
 def run_training(args):   
-    st_network = StyleTransferNetwork(hparams['input_size'])
+    st_network = StyleTransferNetwork(hparams['input_size'], 
+                                      hparams['style_layers'],
+                                      hparams['content_layer_index'])
 
     learning_rate = tf.keras.optimizers.schedules.InverseTimeDecay(hparams['initial_learning_rate'], 
                                                                    decay_steps = 1.0, 
