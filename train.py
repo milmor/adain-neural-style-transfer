@@ -107,7 +107,8 @@ def run_training(args):
         with tf.GradientTape() as tape:
             g_t = st_network(content, style)
             g_t_feats = st_network.encoder(g_t)
-            c_loss = hparams['content_weight']*content_loss(g_t_feats[-1], st_network.t)
+            c_loss = hparams['content_weight']*content_loss(g_t_feats[hparams['content_layer_index']],  
+                                                            st_network.t)
             s_loss = hparams['style_weight']*style_loss(g_t_feats, st_network.s_feats)        
             total_loss = c_loss + s_loss
             scaled_loss = optimizer.get_scaled_loss(total_loss)
