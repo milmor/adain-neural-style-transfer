@@ -10,17 +10,17 @@ See [here](https://github.com/xunhuang1995/AdaIN-style) for the official Torch i
 
 ## Examples
 <p align='center'>
-  <img src='images/content_img/avril_cropped.jpg' width="250">
-  <img src='images/style_img/picasso.png' width="250">
-  <img src='images/output_img_mixed7/step_143000_512x512/avril_cropped_picasso_alpha=1.jpeg' width="250">
+  <img src='images/content_img/avril_cropped.jpg' width="200">
+  <img src='images/style_img/picasso.png' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/avril_cropped_picasso_alpha=1.jpeg' width="200">
 <br>
-  <img src='images/content_img/islas.jpeg' width="250">
-  <img src='images/style_img/woman_with_hat_matisse_cropped.jpg' width="250">
-  <img src='images/output_img_mixed7/step_143000_512x512/islas_woman_with_hat_matisse_cropped_alpha=1.jpeg' width="250">
+  <img src='images/content_img/islas.jpeg' width="200">
+  <img src='images/style_img/woman_with_hat_matisse_cropped.jpg' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/islas_woman_with_hat_matisse_cropped_alpha=1.jpeg' width="200">
 <br>
-  <img src='images/content_img/sailboat_cropped.jpg' width="250">
-  <img src='images/style_img/sketch_cropped.png' width="250">
-  <img src='images/output_img_mixed7/step_143000_512x512/sailboat_cropped_sketch_cropped_alpha=1.jpeg' width="250">
+  <img src='images/content_img/sailboat_cropped.jpg' width="200">
+  <img src='images/style_img/sketch_cropped.png' width="200">
+  <img src='images/output_img_mixed7/step_143000_512x512/sailboat_cropped_sketch_cropped_alpha=1.jpeg' width="200">
 </p>
 
 
