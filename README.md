@@ -1,6 +1,6 @@
 # AdaIN Neural Style Transfer
 
-Implementation of the _Style Transfer Network_ in the paper:
+Implementation of the _Style Transfer Network_ model in the paper:
 
 > Xun Huang and Serge Belongie. [Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization](https://arxiv.org/abs/1703.06868) (ICCV 2017).
 
